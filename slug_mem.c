@@ -5,3 +5,20 @@
  * By: Forrest Kerslager, Nick Noto, David Taylor, Kevin Yeap, Connie
  *       Yu
  */
+
+#include <stdlib.h>
+#include <stdio.h>
+
+#include "hashset.h"
+
+void* slug_malloc(size_t size, char* WHERE){
+    /* TODO */
+}
+
+void slug_free(void* addr, char* WHERE){
+    /* TODO */
+}
+
+void slug_memstats(void){
+    /* TODO */
+}
