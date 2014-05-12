@@ -60,7 +60,7 @@ void double_array_hash(hashset_ref hashset){
    for (size_t i = 0; i<hashset->length; i++){
       bool exists = false;
       if (hashset->array[i] != NULL){
-         uint32_t index = strhash(hashset->array[i]) % new_length;
+         uint32_t index = meminfo_hash(hashset->array[i]->address) % new_length;
          while (new_array[index] != NULL) {
             if (strcmp (new_array[index],hashset->array[i]) == 0){
                exists = true;
@@ -79,7 +79,7 @@ void double_array_hash(hashset_ref hashset){
 
 void put_hashset (hashset_ref hashset, meminfo_ref item) {
    if (too_full_hash (hashset)) double_array_hash (hashset);
-   uint32_t index = meminfo_hash (item) % hashset->length; 
+   uint32_t index = meminfo_hash (item->address) % hashset->length; 
    while (hashset->array[index] != NULL) {
       if (hashset->array[index] == item) return;
       index = (index + 1) % hashset->length;
@@ -89,7 +89,7 @@ void put_hashset (hashset_ref hashset, meminfo_ref item) {
 }
 
 bool has_hashset (hashset_ref hashset, meminfo_ref item) {
-   uint32_t code = meminfo_hash (item) % hashset->length;
+   uint32_t code = meminfo_hash (item->address) % hashset->length;
    while (hashset->array[code] != NULL) {
       if (hashset->array[code] == item) return true;
       code = (code + 1) % hashset->length;
