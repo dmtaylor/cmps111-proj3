@@ -77,21 +77,21 @@ void double_array_hash(hashset_ref hashset){
    hashset->array = new_array;
 }
 
-void put_hashset (hashset_ref hashset, char *item) {
+void put_hashset (hashset_ref hashset, meminfo_ref item) {
    if (too_full_hash (hashset)) double_array_hash (hashset);
-   uint32_t index = strhash (item) % hashset->length;
+   uint32_t index = meminfo_hash (item) % hashset->length; 
    while (hashset->array[index] != NULL) {
-      if (strcmp (hashset->array[index], item) == 0) return;
+      if (hashset->array[index] == item) return;
       index = (index + 1) % hashset->length;
    }
-   hashset->array[index] = strdup (item);
+   hashset->array[index] = item;
    hashset->load++;
 }
 
-bool has_hashset (hashset_ref hashset, char *item) {
-   uint32_t code = strhash (item) % hashset->length;
+bool has_hashset (hashset_ref hashset, meminfo_ref item) {
+   uint32_t code = meminfo_hash (item) % hashset->length;
    while (hashset->array[code] != NULL) {
-      if (strcmp (hashset->array[code], item) == 0) return true;
+      if (hashset->array[code] == item) return true;
       code = (code + 1) % hashset->length;
    }
    return false;

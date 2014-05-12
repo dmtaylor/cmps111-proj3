@@ -5,6 +5,8 @@
 
 #include <stdbool.h>
 
+#include "meminfo.h"
+
 typedef struct hashset *hashset_ref;
 
 //
@@ -20,13 +22,13 @@ void free_hashset (hashset_ref);
 //
 // Inserts a new string into the hashset.
 //
-void put_hashset (hashset_ref, char*);
+void put_hashset (hashset_ref, meminfo_ref);
 
 //
 // Looks up the string in the hashset and returns true if found,
 // false if not found.
 //
-bool has_hashset (hashset_ref, char*);
+bool has_hashset (hashset_ref, meminfo_ref);
 
 void print_debug(hashset_ref hashset);
 void print_hash(hashset_ref hashset);
