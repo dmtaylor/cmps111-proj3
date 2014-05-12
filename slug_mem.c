@@ -65,5 +65,26 @@ void slug_free(void* addr, char* WHERE)
 
 void slug_memstats(void)
 {
-    /* TODO */
+    /*traverse data structure kept by slug_malloc & print table of the following:*/
+    /*for each element(allocation) of data structure: */
+    
+        /*print size, timestamp, address, file, line number of allocation
+        printf("Info Regarding Current Allocations:\n");
+        printf("Size of: %d\tTime Allocated: %d\tAddress of: %d\tLocated in File: %s\t
+               \n", meminfo->size, meminfo->time, meminfo->address, meminfo->file, meminfo->location);
+    
+    /*Print # of total allocations*/
+    printf("Total Number of Allocations: %d", total_allocations);
+    
+    /*Print # of current allocations*/
+    printf("Number of Current Allocations: %d", current_allocations);
+    
+    /*Print amount of memory currently allocated*/
+    printf("Amount of Memory Currently Allocated: %d", amount_currently_allocated);
+    
+    /*Print mean of memory currently allocated*/
+    printf("Mean Size of Memory Currently Allocated: %d", mean_allocated);
+    
+    /*Print standard deviation of memory currently allocated*/
+    printf("Standard Deviation of Current Allocations: %d", standard_deviation_allocated);
 }
