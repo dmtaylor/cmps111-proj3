@@ -9,13 +9,14 @@
 #include "debugf.h"
 #include "hashset.h"
 #include "strhash.h"
+#include "meminfo.h"
 
 #define HASH_NEW_SIZE 15
 
 struct hashset {
    size_t length;
    int load;
-   char **array;
+   meminfo_ref* array;
 };
 
 hashset_ref new_hashset (void) {
@@ -23,7 +24,7 @@ hashset_ref new_hashset (void) {
    assert (new != NULL);
    new->length = HASH_NEW_SIZE;
    new->load = 0;
-   new->array = malloc (new->length * sizeof (char*));
+   new->array = malloc (new->length * sizeof (meminfo_ref));
    assert (new->array != NULL);
    for (size_t index = 0; index < new->length; ++index) {
       new->array[index] = NULL;
@@ -39,7 +40,7 @@ void free_hashset (hashset_ref hashset) {
       free(hashset->array[i]);
       hashset->array[i] = NULL;
    }
-   memset (hashset->array, 0, hashset->length * sizeof (char*));
+   memset (hashset->array, 0, hashset->length * sizeof (meminfo_ref));
    free (hashset->array);
    memset (hashset, 0, sizeof (struct hashset));
    free (hashset);
@@ -51,7 +52,7 @@ bool too_full_hash(hashset_ref hashset){
 
 void double_array_hash(hashset_ref hashset){
    size_t new_length = 2 * hashset->length + 1;
-   char** new_array = malloc(new_length * sizeof (char*));
+   meminfo_ref* new_array = malloc(new_length * sizeof (meminfo_ref));
    for (size_t index = 0; index < new_length; ++index) {
       new_array[index] = NULL;
    }   
