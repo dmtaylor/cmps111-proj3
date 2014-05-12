@@ -12,6 +12,8 @@ typedef struct meminfo {
     char* location;
 } meminfo_t;
 
+
+/* NOTE: Get parameters prior to calling */
 meminfo_ref new_meminfo(size_t new_size, time_t new_time, void* new_addr,
                         char* new_location){
 
@@ -24,6 +26,13 @@ meminfo_ref new_meminfo(size_t new_size, time_t new_time, void* new_addr,
     return temp;
 
 }
+
+/* Not sure if necessary */
+
+/*void free_meminfo(meminfo_ref elim){
+    free(elim);
+    return;
+}*/
 
 
 #endif
