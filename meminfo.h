@@ -10,6 +10,7 @@ typedef struct meminfo {
     time_t time;
     void* address;
     char* location;
+    char tombstone;
 } meminfo_t;
 
 
@@ -23,6 +24,7 @@ meminfo_ref new_meminfo(size_t new_size, time_t new_time, void* new_addr,
     temp->time = new_time;
     temp->address = new_addr;
     temp->location = new_location;
+    temp->tombstone = 0;
     return temp;
 
 }

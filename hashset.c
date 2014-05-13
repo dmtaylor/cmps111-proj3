@@ -50,6 +50,8 @@ bool too_full_hash(hashset_ref hashset){
    return hashset->load * 4 > (int)hashset->length;
 }
 
+
+/* TODO: Add deletion of any meminfos with the tombstone flag set */
 void double_array_hash(hashset_ref hashset){
    size_t new_length = 2 * hashset->length + 1;
    meminfo_ref* new_array = malloc(new_length * sizeof (meminfo_ref));
@@ -77,24 +79,46 @@ void double_array_hash(hashset_ref hashset){
    hashset->array = new_array;
 }
 
+/* TODO incomplete modification for insertion. Need to overrwrite any
+   tombstones */
 void put_hashset (hashset_ref hashset, meminfo_ref item) {
    if (too_full_hash (hashset)) double_array_hash (hashset);
-   uint32_t index = meminfo_hash (item->address) % hashset->length; 
+   uint32_t index = meminfo_hash (item->address) % hashset->length;
    while (hashset->array[index] != NULL) {
-      if (hashset->array[index] == item) return;
+      if (hashset->array[index]->address == item->address &&
+      !hashset->array[index]->tombstone){
+        free(item);
+        return;
+      }
       index = (index + 1) % hashset->length;
    }
    hashset->array[index] = item;
    hashset->load++;
 }
 
-bool has_hashset (hashset_ref hashset, meminfo_ref item) {
+/* TODO: Incomplete */
+void remove_hashset (hashset_ref hashset, meminfo_ref item){
+    uint32_t index = meminfo_hash (item->address) % hashset->length;
+    while (hashset->array[index] != NULL) {
+      if (hashset->array[index]->address == item->address){
+        /*hashset->array[index]->*/
+      }
+      index = (index + 1) % hashset->length;
+   }
+}
+
+/* Modified this to return the pointer to the struct if found, NULL otherwise.
+ * This might be helpful for looking up if something is in the hashset and
+ * referencing directly */
+meminfo_ref has_hashset (hashset_ref hashset, meminfo_ref item) {
    uint32_t code = meminfo_hash (item->address) % hashset->length;
    while (hashset->array[code] != NULL) {
-      if (hashset->array[code] == item) return true;
+      if (hashset->array[code]->address == item->address && 
+        !hashset->array[code]->tombstone) return hashset->array[code];
+    
       code = (code + 1) % hashset->length;
    }
-   return false;
+   return NULL;
 }
 
 void print_debug(hashset_ref hashset){
