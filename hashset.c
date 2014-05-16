@@ -29,6 +29,7 @@ struct hashset {
    meminfo_ref* array;
 };
 
+
 hashset_ref new_hashset (void) {
    hashset_ref new = malloc (sizeof (struct hashset));
    assert (new != NULL);
@@ -43,6 +44,7 @@ hashset_ref new_hashset (void) {
                 new, new->length, new->array);
    return new;
 }
+
 
 void free_hashset (hashset_ref hashset) {
    DEBUGF ('h', "free (%p), free (%p)\n", hashset->array, hashset);
@@ -61,7 +63,7 @@ bool too_full_hash(hashset_ref hashset){
 }
 
 
-/* TODO: Add deletion of any meminfos with the tombstone flag set */
+/* TODO: Check this */
 void double_array_hash(hashset_ref hashset){
    bool exists;
    size_t new_length = 2 * hashset->length + 1;
@@ -96,13 +98,12 @@ void double_array_hash(hashset_ref hashset){
   hashset->array = new_array;
 }
 
-/* Modified this to return the pointer to the struct if found, NULL otherwise.
- * This might be helpful for looking up if something is in the hashset and
- * referencing directly */
-meminfo_ref has_hashset (hashset_ref hashset, meminfo_ref item) {
-   uint32_t code = meminfo_hash (item->address) % hashset->length;
+
+/* TODO: Check this */
+meminfo_ref has_hashset (hashset_ref hashset, void* address) {
+   uint32_t code = meminfo_hash (address) % hashset->length;
    while (hashset->array[code] != NULL) {
-      if (hashset->array[code]->address == item->address && 
+      if (hashset->array[code]->address == address && 
         !hashset->array[code]->tombstone) return hashset->array[code];
     
       code = (code + 1) % hashset->length;
@@ -110,8 +111,8 @@ meminfo_ref has_hashset (hashset_ref hashset, meminfo_ref item) {
    return NULL;
 }
 
-/* TODO incomplete modification for insertion. Need to overrwrite any
-   tombstones. Check this */
+
+/* TODO: Check this */
 void put_hashset (hashset_ref hashset, meminfo_ref item) {
    if (too_full_hash (hashset)) double_array_hash (hashset);
    
@@ -132,7 +133,10 @@ void put_hashset (hashset_ref hashset, meminfo_ref item) {
    hashset->load++;
 }
 
-/* TODO: Check this */
+
+/* TODO: Check this , should the while loop check for a previous tombstone
+         to prevent tombstombing something multiple times
+*/
 void remove_hashset (hashset_ref hashset, void* address){
     if(has_hashset(hashset, address) == NULL){
         fprintf(stderr, "Cannot remove from memory\n");
@@ -151,9 +155,8 @@ void remove_hashset (hashset_ref hashset, void* address){
 }
 
 
-
-
 /* TODO: Modify print statements to print the info */
+/*
 void print_debug(hashset_ref hashset){
    int size = 0;
    int count_array[hashset->load];
@@ -175,13 +178,19 @@ void print_debug(hashset_ref hashset){
           printf("%15d clusters of size %d\n",count_array[index],index);
    }
 }
+*/
 
+
+/* TODO: Check this, format codes are probably wrong */
 void print_hash(hashset_ref hashset){
    for (size_t index = 0; index < hashset->length; index++){
-      if(hashset->array[index] != NULL){
-         uint32_t code = strhash (hashset->array[index]);
-         printf("array[%10d] = %12u \"%s\"\n",
-                (int)index, code, hashset->array[index]);
+      if(hashset->array[index] != NULL  && 
+        !hashset->array[index]->tombstone){
+         printf("Address: %p Size: %zu Time: %u Location: %s",
+			hashset->array[index]->address, 
+			hashset->array[index]->size, 
+			(unsigned)hashset->array[index]->time, 
+			hashset->array[index]->location);
       }
    }
 }
