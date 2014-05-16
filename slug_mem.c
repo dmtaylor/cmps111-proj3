@@ -114,13 +114,17 @@ void slug_memstats(void)
 		return;
 	}
 	
-    /*traverse data structure kept by slug_malloc & print table of the following:*/
-    /*for each element(allocation) of data structure: */
-    
-        /*print size, timestamp, address, file, line number of allocation
-        printf("Info Regarding Current Allocations:\n");
-        printf("Size of: %d\tTime Allocated: %d\tAddress of: %d\tLocated in File: %s\t
-               \n", meminfo->size, meminfo->time, meminfo->address, meminfo->file, meminfo->location);
+    /*traverse hashtable kept by slug_malloc & print the following for each allocation:
+      size, timestamp, address, file, line number */
+    for (size_t index = 0; index < mem_set->length; index++){
+        if(hashset->array[index] != NULL){
+            if (!mem_stat->array[index]->tombstone){
+                printf("Info Regarding Current Allocations:\n");
+                printf("Index: %d\tSize of: %d\tTime Allocated: %d\tAddress of: %d\tLocated in File: %s\t\n", 
+                        index, mem_stat->array[index]->size, mem_stat->array[index]->time, mem_stat->array[index]->address, mem_stat->array[index]->location);
+            }
+        }
+    }
     
     /*Print # of total allocations*/
     printf("Total Number of Allocations: %d", total_allocations);
