@@ -8,6 +8,7 @@
 
 #include <stdlib.h>
 #include <stdio.h>
+#include <math.h>
 
 /* Filler entry for include of hastable.
    Might require a global variable, might not.
@@ -117,11 +118,13 @@ void slug_free(void* addr, char* WHERE)
 
 void slug_memstats(void)
 {
-	uint32_t total_allocations;
-	uint32_t current_allocations;
+
 	uint32_t amount_currently_allocated;
 	uint32_t mean_allocated;
+    uint32_t variance = 0;
 	double standard_deviation_allocated;
+    size_t index;
+    
 	
 	if(mem_set == NULL){
 		fprintf(stdout, "No dynamic memory allocation has been done. \
@@ -131,28 +134,38 @@ void slug_memstats(void)
 	
     /*traverse hashtable kept by slug_malloc & print the following for each allocation:
       size, timestamp, address, file, line number */
-    for (size_t index = 0; index < mem_set->length; index++){
-        if(hashset->array[index] != NULL){
-            if (!mem_stat->array[index]->tombstone){
-                printf("Info Regarding Current Allocations:\n");
-                printf("Index: %d\tSize of: %d\tTime Allocated: %d\tAddress of: %d\tLocated in File: %s\t\n", 
-                        index, mem_stat->array[index]->size, mem_stat->array[index]->time, mem_stat->array[index]->address, mem_stat->array[index]->location);
-            }
-        }
-    }
+    print_hash(mem_set);
     
     /*Print # of total allocations*/
-    printf("Total Number of Allocations: %d", total_allocations);
+    printf("Total Number of Allocations: %d", curr_size_loc);
     
     /*Print # of current allocations*/
-    printf("Number of Current Allocations: %d", current_allocations);
+    printf("Number of Current Allocations: %d", mem_set->load);
     
     /*Print amount of memory currently allocated*/
+    for (index = 0; index < mem_set->length; index++){
+      if(mem_set->array[index] != NULL  && 
+        !mem_set->array[index]->tombstone){
+        amount_currently_allocated += mem_set->array[index]->size;
+      
+      }
+    }
     printf("Amount of Memory Currently Allocated: %d", amount_currently_allocated);
     
-    /*Print mean of memory currently allocated*/
-    printf("Mean Size of Memory Currently Allocated: %d", mean_allocated);
+    /*Print mean of allocated*/
+    for (index =0; index < curr_size_loc ; index++){
+        mean_allocated += size_array[index];
+    }
+    mean_allocated /= curr_size_location;
     
-    /*Print standard deviation of memory currently allocated*/
-    printf("Standard Deviation of Current Allocations: %d", standard_deviation_allocated);
+    printf("Mean Size of Memory Allocated: %d", mean_allocated);
+    
+    /*Print standard deviation of memory allocated*/
+    
+    for(index = 0; index < curr_size_loc; index++){
+        variance += pow(size_array[index] - mean_allocated, 2)
+    }
+    variance /= curr_size_loc;
+    standard_deviation_allocated = sqrt(variance);
+    printf("Standard Deviation of Allocations: %d", standard_deviation_allocated);
 }
