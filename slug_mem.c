@@ -16,6 +16,7 @@
    DOES NOT WORK
 */
 #include "hashset.h"
+#include "slug_mem.h"
 
 #define BASE_ARRAY_SIZE 32
 
