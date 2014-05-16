@@ -20,8 +20,9 @@
 #define BASE_ARRAY_SIZE 32
 
 hashset_ref mem_set = NULL;
-uint32_t size_array[BASE_ARRAY_SIZE];
-uint32_t curr_size_loc = 0;
+uint32_t* size_array;
+uint32_t curr_size_size;
+uint32_t curr_size_loc;
 
 
 void* slug_malloc(size_t size, char* WHERE)
@@ -31,10 +32,14 @@ void* slug_malloc(size_t size, char* WHERE)
 	struct timeval tv;
 	int err;
 	double ticks;
+	int iter;
+	uint32_t* temp_size_array;
 	
 	if(mem_set == NULL){
 		mem_set = new_hashset();
-		
+		size_array = calloc(BASE_ARRAY_SIZE, sizeof(uint32_t));
+		curr_size_size = BASE_ARRAY_SIZE;
+		curr_size_loc = 0;
 	}
 
 	/* Check for the minimum and maximum block size */
@@ -71,7 +76,16 @@ void* slug_malloc(size_t size, char* WHERE)
 	put_hashset(mem_set, entry);
 	
 	/* insert size into size array, this array will be global and require array doubling */
-	
+	if(curr_size_loc == curr_size_size -1){
+		curr_size_size *= 2;
+		temp_size_array = calloc(curr_size_size, sizeof(uint32_t));
+		for(iter = 0; iter<=curr_size_loc; iter++){
+			temp_size_array[iter] = size_array[iter];
+		}
+		free(size_array);
+		size_array = temp_size_array;
+	}
+	size_array[curr_size_loc++] = size;
 	
 }
 
