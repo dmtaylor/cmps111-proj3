@@ -2,9 +2,6 @@
  * By: David Taylor, et. all
  */
 
-
-/* TODO Header stuff here */
-
 #ifndef __MEMINFO_HASH_H__
 #define __MEMINFO_HASH_H__
 

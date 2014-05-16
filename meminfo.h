@@ -1,3 +1,11 @@
+/* meminfo.h : Header file for the meminfo struct used to keep track
+ * of memory.
+ * By: Forrest Kerslager, Nick Noto, David Taylor, Kevin Yeap,
+ * 		Connie Yu
+ * 16.05.2014
+ * 
+ */
+
 #ifndef __MEMINFO_H__
 #define __MEMINFO_H__
 
