@@ -22,7 +22,7 @@
 hashset_ref mem_set = NULL;
 uint32_t* size_array;
 uint32_t curr_size_size;
-uint32_t curr_size_loc;
+uint32_t curr_size_loc; /* Points to the next space to be filled */
 
 
 void* slug_malloc(size_t size, char* WHERE)
@@ -101,6 +101,12 @@ void slug_free(void* addr, char* WHERE)
 
 void slug_memstats(void)
 {
+	uint32_t total_allocations;
+	uint32_t current_allocations;
+	uint32_t amount_currently_allocated;
+	uint32_t mean_allocated;
+	double standard_deviation_allocated;
+	
 	if(mem_set == NULL){
 		fprintf(stdout, "No dynamic memory allocation has been done. \
 		Congrats!\n");
