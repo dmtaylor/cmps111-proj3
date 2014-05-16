@@ -115,7 +115,7 @@ meminfo_ref has_hashset (hashset_ref hashset, meminfo_ref item) {
 void put_hashset (hashset_ref hashset, meminfo_ref item) {
    if (too_full_hash (hashset)) double_array_hash (hashset);
    
-   if(has_hashset(hashset, item) == NULL){
+   if(has_hashset(hashset, item) != NULL){
        free(item);
        return;
    }
@@ -133,14 +133,14 @@ void put_hashset (hashset_ref hashset, meminfo_ref item) {
 }
 
 /* TODO: Check this */
-void remove_hashset (hashset_ref hashset, meminfo_ref item){
-    if(has_hashset(hashset, item == NULL){
+void remove_hashset (hashset_ref hashset, void* address){
+    if(has_hashset(hashset, address) == NULL){
         fprintf(stderr, "Cannot remove from memory\n");
         return;
     }
-    uint32_t index = meminfo_hash (item->address) % hashset->length;
+    uint32_t index = meminfo_hash (address) % hashset->length;
     while (hashset->array[index] != NULL) {
-      if (hashset->array[index]->address == item->address){
+      if (hashset->array[index]->address == address){
         hashset->array[index]->tombstone = 1;
         hashset->load--;
         free(item);
