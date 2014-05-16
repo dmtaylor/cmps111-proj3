@@ -113,7 +113,15 @@ void slug_free(void* addr, char* WHERE)
 		return;
 	}
     
+    
     /* TODO */
+    
+    if(has_hashset(mem_set, addr) == NULL){
+        fprintf(stderr, "slug_mem: error: Tried to free unalloced memory.\n");
+        exit(EXIT_FAILURE);
+    }
+    free(addr);
+    remove_hashset(mem_set, addr);
 }
 
 void slug_memstats(void)
