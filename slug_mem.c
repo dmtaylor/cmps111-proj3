@@ -24,7 +24,13 @@ hashset_ref mem_set = NULL;
 uint32_t* size_array;
 uint32_t curr_size_size;
 uint32_t curr_size_loc; /* Points to the next space to be filled */
+int flag_exithdl = 0; /* Set to 1 when exit handler is installed. Default: 0 */
 
+
+void handleExit() {
+	/* fill in the exit procedure */
+	slug_memstats();
+}
 
 void* slug_malloc(size_t size, char* WHERE)
 {
@@ -59,6 +65,15 @@ void* slug_malloc(size_t size, char* WHERE)
 	if (mem_addr == NULL) {
 		fprintf(stderr, "slug_malloc: error: base malloc failed\n");
 		exit(EXIT_FAILURE);
+	}
+
+	/* Install exit handler */
+	if (!flag_exithdl) {
+		flag_exithdl = 1;
+		if (atexit(handleExit)) {
+			fprintf(stderr, "slug_malloc: error: Cannot set exit handler\n");
+			exit(EXIT_FAILURE);
+		}
 	}
 
 	/* Get the time of allocation */
