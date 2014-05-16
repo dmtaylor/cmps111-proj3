@@ -16,9 +16,8 @@
 #include <stdlib.h>
 #include <string.h>
 
-#include "debugf.h"
 #include "hashset.h"
-#include "strhash.h"
+#include "meminfo_hash.h"
 #include "meminfo.h"
 
 #define HASH_NEW_SIZE 15
@@ -40,14 +39,16 @@ hashset_ref new_hashset (void) {
    for (size_t index = 0; index < new->length; ++index) {
       new->array[index] = NULL;
    }
+   /* 
    DEBUGF ('h', "%p -> struct hashset {length = %d, array=%p}\n",
                 new, new->length, new->array);
+   */
    return new;
 }
 
 
 void free_hashset (hashset_ref hashset) {
-   DEBUGF ('h', "free (%p), free (%p)\n", hashset->array, hashset);
+   /* DEBUGF ('h', "free (%p), free (%p)\n", hashset->array, hashset); */
    for (size_t i = 0; i < hashset->length; i++){
       free(hashset->array[i]);
       hashset->array[i] = NULL;

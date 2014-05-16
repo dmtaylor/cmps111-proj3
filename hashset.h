@@ -31,20 +31,19 @@ void free_hashset (hashset_ref);
 /*
 // Inserts a new meminfo_ref into the hashset.
 */
-void put_hashset (hashset_ref, meminfo_ref);
+void put_hashset (hashset_ref, void*);
 
 /*
  * Removes a given meminfo_ref from the hashset by invalidating the data
  */
-void remove_hashset(hashset_ref, meminfo_ref);
+void remove_hashset(hashset_ref, void*);
 
 /*
 // Looks up the meminfo_ref in the hashset and returns pointer if found,
 // NULL if not found.
 */
-meminfo_ref has_hashset (hashset_ref, meminfo_ref);
+meminfo_ref has_hashset (hashset_ref, void*);
 
-void print_debug(hashset_ref hashset);
 void print_hash(hashset_ref hashset);
 #endif
 
