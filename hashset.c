@@ -63,6 +63,7 @@ bool too_full_hash(hashset_ref hashset){
 
 /* TODO: Add deletion of any meminfos with the tombstone flag set */
 void double_array_hash(hashset_ref hashset){
+   bool exists;
    size_t new_length = 2 * hashset->length + 1;
    meminfo_ref* new_array = malloc(new_length * sizeof (meminfo_ref));
    for (size_t index = 0; index < new_length; ++index) {
@@ -75,6 +76,7 @@ void double_array_hash(hashset_ref hashset){
           /* Deletes unused meminfos when resizing array */
           if(hashset->array[i]->tombstone){
             free(hashset->array[i]);
+            continue;
           }
           uint32_t index = meminfo_hash(hashset->array[i]->address) % new_length;
           while (new_array[index] != NULL) {
