@@ -1,5 +1,15 @@
-// Author: Forrest Kerslager, fkerslag@ucsc.edu
-// $Id: hashset.c,v 1.49 2012-12-07 19:34:20-08 - - $
+
+/* hashset.c : Implementation file for the hashset used to keep track
+ *              of memory.
+ * 
+ * By: Forrest Kerslager, Nick Noto, David Taylor, Kevin Yeap, 
+ *     Connie Yu.
+ * 
+ * 
+ */
+
+/* Old header:// Author: Forrest Kerslager, fkerslag@ucsc.edu
+// $Id: hashset.c,v 1.49 2012-12-07 19:34:20-08 - - $*/
 
 #include <assert.h>
 #include <stdio.h>
@@ -62,46 +72,62 @@ void double_array_hash(hashset_ref hashset){
    for (size_t i = 0; i<hashset->length; i++){
       bool exists = false;
       if (hashset->array[i] != NULL){
-         uint32_t index = meminfo_hash(hashset->array[i]->address) % new_length;
-         while (new_array[index] != NULL) {
-            if (strcmp (new_array[index],hashset->array[i]) == 0){
-               exists = true;
-               break;
-            }
-            index = (index + 1) % new_length;
-         }
-         if(!exists) new_array[index] = hashset->array[i];
-      }
-   }
+          /* Deletes unused meminfos when resizing array */
+          if(hashset->array[i]->tombstone){
+            free(hashset->array[i]);
+          }
+          uint32_t index = meminfo_hash(hashset->array[i]->address) % new_length;
+          while (new_array[index] != NULL) {
+              if (strcmp (new_array[index],hashset->array[i]) == 0){
+                  exists = true;
+                  break;
+              }
+              index = (index + 1) % new_length;
+          }
+          if(!exists) new_array[index] = hashset->array[i];
+    }
+  }
    
-   free(hashset->array);
-   hashset->length = new_length;
-   hashset->array = new_array;
+  free(hashset->array);
+  hashset->length = new_length;
+  hashset->array = new_array;
 }
 
 /* TODO incomplete modification for insertion. Need to overrwrite any
-   tombstones */
+   tombstones. Check this */
 void put_hashset (hashset_ref hashset, meminfo_ref item) {
    if (too_full_hash (hashset)) double_array_hash (hashset);
+   
+   if(has_hashset(hashset, item) == NULL){
+       free(item);
+       return;
+   }
    uint32_t index = meminfo_hash (item->address) % hashset->length;
    while (hashset->array[index] != NULL) {
-      if (hashset->array[index]->address == item->address &&
-      !hashset->array[index]->tombstone){
-        free(item);
-        return;
+      if(hashset->array[index]->tombstone){
+          free(hashset->array[index]);
+          break;
       }
+      
       index = (index + 1) % hashset->length;
    }
    hashset->array[index] = item;
    hashset->load++;
 }
 
-/* TODO: Incomplete */
+/* TODO: Check this */
 void remove_hashset (hashset_ref hashset, meminfo_ref item){
+    if(has_hashset(hashset, item == NULL){
+        fprintf(stderr, "Cannot remove from memory\n");
+        return;
+    }
     uint32_t index = meminfo_hash (item->address) % hashset->length;
     while (hashset->array[index] != NULL) {
       if (hashset->array[index]->address == item->address){
-        /*hashset->array[index]->*/
+        hashset->array[index]->tombstone = 1;
+        hashset->load--;
+        free(item);
+        return;
       }
       index = (index + 1) % hashset->length;
    }
@@ -121,6 +147,8 @@ meminfo_ref has_hashset (hashset_ref hashset, meminfo_ref item) {
    return NULL;
 }
 
+
+/* TODO: Modify print statements to print the info */
 void print_debug(hashset_ref hashset){
    int size = 0;
    int count_array[hashset->load];

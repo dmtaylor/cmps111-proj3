@@ -1,4 +1,13 @@
-// $Id: hashset.h,v 1.1 2012-11-16 18:05:22-08 - - $
+
+
+/* hashset.h : Header file for the hashset used to keep track
+ *              of memory.
+ * 
+ * By: Forrest Kerslager, Nick Noto, David Taylor, Kevin Yeap, 
+ *     Connie Yu.
+ * 
+ * 
+ */
 
 #ifndef __HASHSET_H__
 #define __HASHSET_H__
