@@ -80,7 +80,7 @@ void double_array_hash(hashset_ref hashset){
           }
           uint32_t index = meminfo_hash(hashset->array[i]->address) % new_length;
           while (new_array[index] != NULL) {
-              if (strcmp (new_array[index],hashset->array[i]) == 0){
+              if (new_array[index]->address == hashset->array[i]->address){
                   exists = true;
                   break;
               }
