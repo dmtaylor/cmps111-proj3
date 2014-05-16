@@ -93,6 +93,20 @@ void double_array_hash(hashset_ref hashset){
   hashset->array = new_array;
 }
 
+/* Modified this to return the pointer to the struct if found, NULL otherwise.
+ * This might be helpful for looking up if something is in the hashset and
+ * referencing directly */
+meminfo_ref has_hashset (hashset_ref hashset, meminfo_ref item) {
+   uint32_t code = meminfo_hash (item->address) % hashset->length;
+   while (hashset->array[code] != NULL) {
+      if (hashset->array[code]->address == item->address && 
+        !hashset->array[code]->tombstone) return hashset->array[code];
+    
+      code = (code + 1) % hashset->length;
+   }
+   return NULL;
+}
+
 /* TODO incomplete modification for insertion. Need to overrwrite any
    tombstones. Check this */
 void put_hashset (hashset_ref hashset, meminfo_ref item) {
@@ -133,19 +147,7 @@ void remove_hashset (hashset_ref hashset, meminfo_ref item){
    }
 }
 
-/* Modified this to return the pointer to the struct if found, NULL otherwise.
- * This might be helpful for looking up if something is in the hashset and
- * referencing directly */
-meminfo_ref has_hashset (hashset_ref hashset, meminfo_ref item) {
-   uint32_t code = meminfo_hash (item->address) % hashset->length;
-   while (hashset->array[code] != NULL) {
-      if (hashset->array[code]->address == item->address && 
-        !hashset->array[code]->tombstone) return hashset->array[code];
-    
-      code = (code + 1) % hashset->length;
-   }
-   return NULL;
-}
+
 
 
 /* TODO: Modify print statements to print the info */
