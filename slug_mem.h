@@ -20,7 +20,7 @@
 #define INT2STRING(i) FUNCTIONIZE(STRINGIZE,i) /*calls the generic function.*/
 #define WHERE __FILE__ ":" INT2STRING(__LINE__) /*WHERE is a pointer an array of characters*/
 #define malloc(s) slug_malloc((s), WHERE) /*replace all malloc with slug_malloc*/
-#define free(t) slug_free((s), WHERE) /*replace all free with slut_free*/
+#define free(t) slug_free((t), WHERE) /*replace all free with slut_free*/
 
 void* slug_malloc(size_t size, char* WHERE);
 
