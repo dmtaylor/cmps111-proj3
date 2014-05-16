@@ -17,6 +17,13 @@
 */
 #include "hashset.h"
 
+#define BASE_ARRAY_SIZE 32
+
+hashset_ref mem_set = NULL;
+uint32_t size_array[BASE_ARRAY_SIZE];
+uint32_t curr_size_loc = 0;
+
+
 void* slug_malloc(size_t size, char* WHERE)
 {
 	meminfo_ref entry;
@@ -24,6 +31,11 @@ void* slug_malloc(size_t size, char* WHERE)
 	struct timeval tv;
 	int err;
 	double ticks;
+	
+	if(mem_set == NULL){
+		mem_set = new_hashset();
+		
+	}
 
 	/* Check for the minimum and maximum block size */
 	if (size == 0) {
@@ -39,7 +51,8 @@ void* slug_malloc(size_t size, char* WHERE)
 	/* Allocate the memory and store its location */
 	mem_addr = malloc(size);
 	if (mem_addr == NULL) {
-		/* error */
+		fprintf(stderr, "slug_malloc: error: base malloc failed\n");
+		exit(EXIT_FAILURE);
 	}
 
 	/* Get the time of allocation */
@@ -55,16 +68,31 @@ void* slug_malloc(size_t size, char* WHERE)
 	entry = new_meminfo(size, ticks, mem_addr, WHERE)
 
 	/* insert entry into hash, hashed by mem_addr */
+	put_hashset(mem_set, entry);
+	
 	/* insert size into size array, this array will be global and require array doubling */
+	
+	
 }
 
 void slug_free(void* addr, char* WHERE)
 {
+    if(mem_set == NULL){
+		fprintf(stderr, "slug_mem: error: No memory allocated, don't do that!");
+		return;
+	}
+    
     /* TODO */
 }
 
 void slug_memstats(void)
 {
+	if(mem_set == NULL){
+		fprintf(stdout, "No dynamic memory allocation has been done. \
+		Congrats!\n");
+		return;
+	}
+	
     /*traverse data structure kept by slug_malloc & print table of the following:*/
     /*for each element(allocation) of data structure: */
     
