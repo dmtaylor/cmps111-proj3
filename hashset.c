@@ -112,7 +112,7 @@ meminfo_ref has_hashset (hashset_ref hashset, void* address)
 	uint32_t code = meminfo_hash (address) % hashset->length;
 
 	while (hashset->array[code] != NULL) {
-		if (hashset->array[code]->address == address && !hashset->array[code]->tombstone) {
+		if ((hashset->array[code]->address == address) && (!hashset->array[code]->tombstone)) {
 			return hashset->array[code];
 		}
 		code = (code + 1) % hashset->length;

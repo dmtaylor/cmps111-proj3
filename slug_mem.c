@@ -117,8 +117,8 @@ void slug_free(void* addr, char* WHERE)
     }
 
 	/* When to free mem structs? freeing here means you cannot tombstone in remove_hashset */
-    /* free(addr); */
     remove_hashset(mem_set, addr);
+    free(addr);
 }
 
 void slug_memstats(void)
