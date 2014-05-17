@@ -101,6 +101,8 @@ void* slug_malloc(size_t size, char* WHERE)
 		size_array = temp_size_array;
 	}
 	size_array[curr_size_loc++] = size;
+
+	return mem_addr;
 }
 
 void slug_free(void* addr, char* WHERE)
@@ -124,22 +126,25 @@ void slug_free(void* addr, char* WHERE)
 
 void slug_memstats(void)
 {
-	uint32_t amount_currently_allocated;
-	uint32_t mean_allocated;
-    uint32_t variance = 0;
-	double standard_deviation_allocated;
+	uint32_t amount_currently_allocated = 0;
+	double mean_allocated = 0.0;
+    double variance = 0.0;
+	double standard_deviation_allocated = 0.0;
     size_t index;
     
 	if(mem_set == NULL) {
 		fprintf(stdout, "No dynamic memory allocation has been done. Congrats!\n");
 		return;
-	}
-	
-    /* Traverse hashtable kept by slug_malloc & print the following for each allocation:
-     * size, timestamp, address, file, line number 
-	 */
-    print_hash(mem_set);
-    
+	} else {
+		/* Traverse hashtable kept by slug_malloc & print the following for each allocation:
+		 * size, timestamp, address, file, line number 
+		 */
+		printf("Unfreed Memory\n===========================\n");
+		print_hash(mem_set);
+		printf("\n");
+    }
+
+	printf("Statistics\n=============================\n");
     /* Print # of total allocations */
     printf("Total Number of Allocations: %d\n", curr_size_loc);
     
@@ -153,7 +158,7 @@ void slug_memstats(void)
 		}
     }
 
-    printf("Amount of Memory Currently Allocated: %d\n", amount_currently_allocated);
+    printf("Amount of Memory Currently Allocated: %u\n", amount_currently_allocated);
     
     /* Print mean of allocated */
     for (index = 0; index < curr_size_loc ; index++) {
@@ -161,14 +166,13 @@ void slug_memstats(void)
     }
     mean_allocated /= curr_size_loc;
 
-    printf("Mean Size of Memory Allocated: %d\n", mean_allocated);
+    printf("Mean Size of Memory Allocated: %lf\n", mean_allocated);
     
     /* Print standard deviation of memory allocated */
     for(index = 0; index < curr_size_loc; index++) {
-        variance += pow(size_array[index] - mean_allocated, 2);
+        variance += pow(((double)size_array[index] - mean_allocated), 2);
     }
-    variance /= curr_size_loc;
+    variance /= curr_size_loc - 1;
     standard_deviation_allocated = sqrt(variance);
-
-    printf("Standard Deviation of Allocations: %d\n", standard_deviation_allocated);
+    printf("Standard Deviation of Allocations: %lf\n", standard_deviation_allocated);
 }

@@ -110,7 +110,6 @@ void double_array_hash(hashset_ref hashset)
 meminfo_ref has_hashset (hashset_ref hashset, void* address) 
 {
 	uint32_t code = meminfo_hash (address) % hashset->length;
-
 	while (hashset->array[code] != NULL) {
 		if ((hashset->array[code]->address == address) && (!hashset->array[code]->tombstone)) {
 			return hashset->array[code];
@@ -131,13 +130,12 @@ void put_hashset (hashset_ref hashset, meminfo_ref item)
 		double_array_hash (hashset);
 	}
 
-	if(has_hashset(hashset, item) != NULL) {
+	if(has_hashset(hashset, item->address) != NULL) {
 		free(item);
 		return;
 	}
 
 	index = meminfo_hash (item->address) % hashset->length;
-
 	while (hashset->array[index] != NULL) {
 		if(hashset->array[index]->tombstone) {
 			free(hashset->array[index]);
