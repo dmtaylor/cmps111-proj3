@@ -7,6 +7,23 @@ By: Forrest Kerslager
     David Taylor
     Kevin Yeap
     Connie Yu
+    
+########################################################################
+							File Listing
+########################################################################
+
+hashset.c
+hashset.h
+meminfo.c
+meminfo.h
+meminfo_hash.c
+meminfo_hash.h
+slug_mem.c
+slug_mem.h
+
+# Test files here
+
+README.txt
 
 ########################################################################
                             Build Instructions
