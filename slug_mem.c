@@ -100,6 +100,8 @@ void* slug_malloc(size_t size, char* WHERE)
 		size_array = temp_size_array;
 	}
 	size_array[curr_size_loc++] = size;
+
+	return mem_addr;
 }
 
 void slug_free(void* addr, char* WHERE)
@@ -111,6 +113,7 @@ void slug_free(void* addr, char* WHERE)
     
     /* TODO */
     
+	/* printf("Free: Looking for %p\n",addr); */
     if(has_hashset(mem_set, addr) == NULL) {
         fprintf(stderr, "slug_mem: error: Tried to free unallocated memory.\n");
         exit(EXIT_FAILURE);

@@ -110,8 +110,9 @@ void double_array_hash(hashset_ref hashset)
 meminfo_ref has_hashset (hashset_ref hashset, void* address) 
 {
 	uint32_t code = meminfo_hash (address) % hashset->length;
-
+	/* printf("Has_Hash: Starting probe for addr %p at %u generated with length %u\n",address,code, hashset->length); */
 	while (hashset->array[code] != NULL) {
+		/* printf("Has_Hash: Cursor at %u Tomb? %d\n",hashset->array[code]->address, hashset->array[code]->tombstone); */
 		if (hashset->array[code]->address == address && !hashset->array[code]->tombstone) {
 			return hashset->array[code];
 		}
@@ -131,13 +132,13 @@ void put_hashset (hashset_ref hashset, meminfo_ref item)
 		double_array_hash (hashset);
 	}
 
-	if(has_hashset(hashset, item) != NULL) {
+	if(has_hashset(hashset, item->address) != NULL) {
 		free(item);
 		return;
 	}
 
 	index = meminfo_hash (item->address) % hashset->length;
-
+	/* printf("Put_Hash: Starting probe for %p at %u generated with length %u\n",item->address,index, hashset->length); */
 	while (hashset->array[index] != NULL) {
 		if(hashset->array[index]->tombstone) {
 			free(hashset->array[index]);
@@ -145,6 +146,8 @@ void put_hashset (hashset_ref hashset, meminfo_ref item)
 		}
 		index = (index + 1) % hashset->length;
 	}
+
+	/* printf("Put_Hash: Inserting at %u generated with length %u\n",index, hashset->length); */
 
 	hashset->array[index] = item;
 	hashset->load++;
