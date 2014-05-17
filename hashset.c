@@ -209,10 +209,10 @@ void print_hash(hashset_ref hashset)
 
 	for (index = 0; index < hashset->length; index++) {
 		if(hashset->array[index] != NULL  && !hashset->array[index]->tombstone) {
-			printf("Address: %p Size: %zu Time: %u Location: %s",
+			printf("Address: %p Size: %u Time: %u Location: %s\n",
 				hashset->array[index]->address, 
 				hashset->array[index]->size, 
-				(unsigned)hashset->array[index]->time, 
+				hashset->array[index]->time, 
 				hashset->array[index]->location);
 		}
 	}

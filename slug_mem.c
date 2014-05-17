@@ -137,7 +137,7 @@ void slug_memstats(void)
     /* Traverse hashtable kept by slug_malloc & print the following for each allocation:
      * size, timestamp, address, file, line number 
 	 */
-    /* print_hash(mem_set); */
+    print_hash(mem_set);
     
     /* Print # of total allocations */
     printf("Total Number of Allocations: %d\n", curr_size_loc);
