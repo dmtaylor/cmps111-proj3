@@ -29,6 +29,7 @@ void slug_memstats(void);
 void handleExit(void) {
 	/* fill in the exit procedure, free hash table? */
 	slug_memstats();
+	free_hashset(mem_set);
 }
 
 void* slug_malloc(size_t size, char* WHERE)
