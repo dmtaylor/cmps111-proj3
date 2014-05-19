@@ -19,11 +19,14 @@
 
 #include "slug_mem.h"
 
-/*compile with "cc malloc_replace_test"*/
+/* Comment this out to make the program exit cleanly with no allocations */
+/* #define NOALLOC */
 
 int main(int argc, char *argv[]) {
 	void* allocs[100];
 	int i, num = 0;
+
+	#ifndef NOALLOC
 
 	/* Valid sized allocations */
 	allocs[num++] = malloc(sizeof(char)); 
@@ -39,7 +42,6 @@ int main(int argc, char *argv[]) {
 	/* allocs[num++] = malloc(0); */	/* Invalid, 0 MB, print error to stderr and catch malloc error/exit? */
 	/* allocs[num++] = malloc(134217729); */	/* Invalid, >128 MB, print error to stderr and exit */
 
-
 	/* Make sure programmer did not allocate too many entries */
 	assert(num < 100);
 
@@ -49,7 +51,11 @@ int main(int argc, char *argv[]) {
 	}
 
 	/* free(allocs[0]); */	/* Invalid, freeing deallocated memory, print error to stderr and exit */
-  
-	/* Exiting should print a table of unfreed memory and statistics */
+ 
+	#endif
+
+	/* Exiting should print a table of unfreed memory and statistics
+	 * unless NOALLOC is not defined
+	 */
 	return 0;
 }
