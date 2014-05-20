@@ -49,7 +49,7 @@ void* slug_malloc(size_t size, char* WHERE)
 	double ticks;
 	uint32_t* temp_size_array;
 	meminfo_ref entry;
-	void* mem_addr;
+	void* mem_addr = NULL;
 	struct timeval tv;
 	
 	if(mem_set == NULL) {
@@ -77,6 +77,12 @@ void* slug_malloc(size_t size, char* WHERE)
 			fprintf(stderr, "slug_malloc:%s: error: Call to malloc failed.\n", WHERE);
 			exit(EXIT_FAILURE);
 		}
+
+		/* Create entry for hash table */
+		entry = new_meminfo(size, ticks, mem_addr, WHERE);
+
+		/* Insert entry into hash, hashed by mem_addr */
+		put_hashset(mem_set, entry);
 	}
 
 	/* Install exit handler */
@@ -97,12 +103,6 @@ void* slug_malloc(size_t size, char* WHERE)
 		exit(EXIT_FAILURE);
 	}
 
-	/* Create entry for hash table */
-	entry = new_meminfo(size, ticks, mem_addr, WHERE);
-
-	/* Insert entry into hash, hashed by mem_addr */
-	put_hashset(mem_set, entry);
-	
 	/* Insert size into size array, this array will be global and require array doubling */
 	if(curr_size_loc == curr_size_size - 1){
 		curr_size_size *= 2;
