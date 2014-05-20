@@ -23,7 +23,7 @@
 /* #define NOALLOC */
 
 int main(int argc, char *argv[]) {
-	void* allocs[100], big_alloc[1000];
+	void* allocs[100], *big_alloc[1000];
 	int i, num = 0;
 
 	#ifndef NOALLOC
