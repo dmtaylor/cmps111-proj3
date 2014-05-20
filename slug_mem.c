@@ -48,9 +48,9 @@ void* slug_malloc(size_t size, char* WHERE)
 		curr_size_loc = 0;
 	}
 
-	/* Check for the minimum and maximum block size */
+	/* Check for the minimum and maximum block size, skip malloc if zero */
 	if (size == 0) {
-		fprintf(stderr,"slug_malloc: error: Cannot allocate a zero size block.\n");
+		fprintf(stderr,"slug_malloc: warning: Cannot allocate a zero size block.\n");
 	}
 
 	/* sizeof returns bytes, check for a size >= 128 MB in bytes */
@@ -60,17 +60,19 @@ void* slug_malloc(size_t size, char* WHERE)
 	}
 
 	/* Allocate the memory and store its location */
-	mem_addr = malloc(size);
-	if (mem_addr == NULL) {
-		fprintf(stderr, "slug_malloc: error: base malloc failed\n");
-		exit(EXIT_FAILURE);
+	if (size != 0) {
+		mem_addr = malloc(size);
+		if (mem_addr == NULL) {
+			fprintf(stderr, "slug_malloc: error: Call to malloc failed.\n");
+			exit(EXIT_FAILURE);
+		}
 	}
 
 	/* Install exit handler */
 	if (!flag_exithdl) {
 		flag_exithdl = 1;
 		if (atexit(handleExit)) {
-			fprintf(stderr, "slug_malloc: error: Cannot set exit handler\n");
+			fprintf(stderr, "slug_malloc: error: Cannot set exit handler.\n");
 			exit(EXIT_FAILURE);
 		}
 	}
