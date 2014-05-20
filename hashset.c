@@ -176,32 +176,6 @@ void remove_hashset (hashset_ref hashset, void* address)
 }
 
 
-/* TODO: Modify print statements to print the info */
-/*
-void print_debug(hashset_ref hashset){
-   int size = 0;
-   int count_array[hashset->load];
-   for (int index = 0; index<hashset->load; index++){
-      count_array[index] = 0;
-   }
-   for (size_t index = 0; index < hashset->length; index++){
-      if(hashset->array[index] != NULL) size++;
-      else{
-         count_array[size]++;
-         size = 0;
-      }
-   }
-
-   printf("%15d words in hash set\n", hashset->load);
-   printf("%15d length of the hash array\n", (int)hashset->length);
-   for (int index = 1; index<hashset->load; index++){
-      if (count_array[index] != 0)
-          printf("%15d clusters of size %d\n",count_array[index],index);
-   }
-}
-*/
-
-
 /* TODO: Check this, format codes are probably wrong */
 void print_hash(hashset_ref hashset)
 {
