@@ -1,7 +1,7 @@
 /*	These tests are meant to:
 	[X] Show a test program that correctly uses allocation in a non­trivial way behaves 
 		correctly.
-	[] Show that after allocating and deallocating memory, trying to deallocate an invalid 
+	[/] Show that after allocating and deallocating memory, trying to deallocate an invalid 
 		address is immediately detected.
 	[X] Show that after allocating and deallocating memory, trying to deallocate an already 
 		freed region is immediately detected.
@@ -23,7 +23,7 @@
 /* #define NOALLOC */
 
 int main(int argc, char *argv[]) {
-	void* allocs[100];
+	void* allocs[100], big_alloc[1000];
 	int i, num = 0;
 
 	#ifndef NOALLOC
@@ -39,7 +39,7 @@ int main(int argc, char *argv[]) {
 
 	allocs[num++] = malloc(134217727);	/* Valid */
 	allocs[num++] = malloc(134217728);	/* Valid */
-	/* allocs[num++] = malloc(0); */	/* Invalid, 0 MB, print error to stderr and catch malloc error/exit? */
+	/* allocs[num++] = malloc(0); */	/* Invalid, 0 MB, print error to stderr and catch malloc error/exit? or return malloc return value to user */
 	/* allocs[num++] = malloc(134217729); */	/* Invalid, >128 MB, print error to stderr and exit */
 
 	/* Make sure programmer did not allocate too many entries */
@@ -50,7 +50,13 @@ int main(int argc, char *argv[]) {
 		free(allocs[i]);
 	}
 
-	/* free(allocs[0]); */	/* Invalid, freeing deallocated memory, print error to stderr and exit */
+	/* Allocate and free many regions in a tight loop*/
+	for(i = 0; i < 1000; i++){
+		big_alloc[i] = malloc(sizeof(char));
+		free(big_alloc[i]);
+	}
+
+	/* free(allocs[0]); */	/* Invalid, freeing invalid/freed memory, print error to stderr and exit */
  
 	#endif
 
