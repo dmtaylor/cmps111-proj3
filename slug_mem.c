@@ -17,21 +17,32 @@
 #define BASE_ARRAY_SIZE 32
 
 hashset_ref mem_set = NULL;
-uint32_t* size_array;
+uint32_t* size_array;	/* Stores the size of each allocation */
 uint32_t curr_size_size;
-uint32_t curr_size_loc; /* Points to the next space to be filled */
-int flag_exithdl = 0; /* Set to 1 when exit handler is installed. Default: 0 */
+uint32_t curr_size_loc;	/* Points to the next space to be filled */
+int flag_exithdl = 0; 	/* Set to 1 when exit handler is installed */
 
+/* Prototypes */
 void* slug_malloc(size_t, char*);
 void slug_free(void*, char*);
 void slug_memstats(void);
 
+
+/* Prints the statistics of all memory allocations.
+ * This exit handler is installed during the first call to slug_malloc() 
+ */
 void handleExit(void) {
-	/* fill in the exit procedure, free hash table? */
 	slug_memstats();
 	free_hashset(mem_set);
 }
 
+
+/* slug_malloc() checks for common malloc errors and records statistical information.
+ * size is the size the of the desired memory allocations. 
+ * WHERE is a string inserted by directives in slug_mem.h that contains 
+ *    the file and line number of the original call to malloc().
+ * Return Value: Returns a pointer to the allocated memory.
+ */
 void* slug_malloc(size_t size, char* WHERE)
 {
 	int err, iter;
@@ -107,6 +118,11 @@ void* slug_malloc(size_t size, char* WHERE)
 	return mem_addr;
 }
 
+/* slug_free() checks for common freeing errors.
+ * addr is a pointer to the allocation to free. 
+ * WHERE is a string inserted by directives in slug_mem.h that contains 
+ *    the file and line number of the original call to free().
+ */
 void slug_free(void* addr, char* WHERE)
 {
     if(mem_set == NULL) {
@@ -126,6 +142,8 @@ void slug_free(void* addr, char* WHERE)
     free(addr);
 }
 
+
+/* slug_memstats() reports statistics on historical and current allocations. */
 void slug_memstats(void)
 {
 	uint32_t amount_currently_allocated = 0;
@@ -134,23 +152,19 @@ void slug_memstats(void)
 	double standard_deviation_allocated = 0.0;
     size_t index;
     
+	/* Print current memory allocations */
 	if(mem_set == NULL) {
 		fprintf(stdout, "No dynamic memory allocation has been done. Congrats!\n");
 		return;
 	} else {
-		/* Traverse hashtable kept by slug_malloc & print the following for each allocation:
-		 * size, timestamp, address, file, line number 
-		 */
 		printf("Unfreed Memory\n===========================\n");
 		print_hash(mem_set);
 		printf("\n");
     }
 
+	/* Print statistics of all memory allocation */
 	printf("Statistics\n=============================\n");
-    /* Print # of total allocations */
     printf("Total Number of Allocations: %d\n", curr_size_loc);
-    
-    /* Print # of current allocations */
     printf("Number of Current Allocations: %d\n", mem_set->load);
     
     /* Print amount of memory currently allocated */
@@ -159,7 +173,6 @@ void slug_memstats(void)
 			amount_currently_allocated += mem_set->array[index]->size;
 		}
     }
-
     printf("Amount of Memory Currently Allocated: %u\n", amount_currently_allocated);
     
     /* Print mean of allocated */
@@ -167,7 +180,6 @@ void slug_memstats(void)
         mean_allocated += size_array[index];
     }
     mean_allocated /= curr_size_loc;
-
     printf("Mean Size of Memory Allocated: %lf\n", mean_allocated);
     
     /* Print standard deviation of memory allocated */
