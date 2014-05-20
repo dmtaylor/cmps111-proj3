@@ -5,7 +5,7 @@
 		address is immediately detected.
 	[X] Show that after allocating and deallocating memory, trying to deallocate an already 
 		freed region is immediately detected.
-	[] Show that after allocating and deallocating memory, trying to deallocate a valid region 
+	[/] Show that after allocating and deallocating memory, trying to deallocate a valid region 
 		by passing in a pointer inside the region is immediately detected.
 	[X] Show that allocating memory and then exiting triggers the leak detector and shows 
 		where the leak occurred.
@@ -39,11 +39,13 @@ int main(int argc, char *argv[]) {
 
 	allocs[num++] = malloc(134217727);	/* Valid */
 	allocs[num++] = malloc(134217728);	/* Valid */
-	/* allocs[num++] = malloc(0); */	/* Invalid, 0 MB, print error to stderr and catch malloc error/exit? or return malloc return value to user */
+	allocs[num++] = malloc(0);	/* Invalid, 0 MB, print error to stderr and skip malloc */
 	/* allocs[num++] = malloc(134217729); */	/* Invalid, >128 MB, print error to stderr and exit */
 
 	/* Make sure programmer did not allocate too many entries */
 	assert(num < 100);
+
+	printf("All allocations made.\n");
 
 	/* Free all valid allocations in the array */
 	for(i = 0; i < 9; i++){
@@ -58,6 +60,7 @@ int main(int argc, char *argv[]) {
 
 	/* free(allocs[0]); */	/* Invalid, freeing invalid/freed memory, print error to stderr and exit */
  
+	printf("All frees made.\n");
 	#endif
 
 	/* Exiting should print a table of unfreed memory and statistics
