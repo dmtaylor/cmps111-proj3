@@ -61,12 +61,12 @@ void* slug_malloc(size_t size, char* WHERE)
 
 	/* Check for the minimum and maximum block size, skip malloc if zero */
 	if (size == 0) {
-		fprintf(stderr,"slug_malloc: warning: Cannot allocate a zero size block.\n");
+		fprintf(stderr,"slug_malloc:%s: warning: Cannot allocate a zero size block.\n", WHERE);
 	}
 
 	/* sizeof returns bytes, check for a size >= 128 MB in bytes */
 	if (size > 134217728) {
-		fprintf(stderr,"slug_malloc: error: Cannot allocate block size greater than 128MB.\n");
+		fprintf(stderr,"slug_malloc:%s: error: Cannot allocate block size greater than 128MB.\n", WHERE);
 		exit(EXIT_FAILURE);
 	}
 
@@ -74,7 +74,7 @@ void* slug_malloc(size_t size, char* WHERE)
 	if (size != 0) {
 		mem_addr = malloc(size);
 		if (mem_addr == NULL) {
-			fprintf(stderr, "slug_malloc: error: Call to malloc failed.\n");
+			fprintf(stderr, "slug_malloc:%s: error: Call to malloc failed.\n", WHERE);
 			exit(EXIT_FAILURE);
 		}
 	}
@@ -83,7 +83,7 @@ void* slug_malloc(size_t size, char* WHERE)
 	if (!flag_exithdl) {
 		flag_exithdl = 1;
 		if (atexit(handleExit)) {
-			fprintf(stderr, "slug_malloc: error: Cannot set exit handler.\n");
+			fprintf(stderr, "slug_malloc:%s: error: Cannot set exit handler.\n", WHERE);
 			exit(EXIT_FAILURE);
 		}
 	}
@@ -93,7 +93,7 @@ void* slug_malloc(size_t size, char* WHERE)
 	if(!err) {
 		ticks = tv.tv_sec + tv.tv_usec * 1e-6;
 	} else {
-		fprintf(stderr,"slug_malloc: error: Time resolution failed.\n");
+		fprintf(stderr,"slug_malloc:%s: error: Time resolution failed.\n", WHERE);
 		exit(EXIT_FAILURE);
 	}
 
@@ -118,6 +118,7 @@ void* slug_malloc(size_t size, char* WHERE)
 	return mem_addr;
 }
 
+
 /* slug_free() checks for common freeing errors.
  * addr is a pointer to the allocation to free. 
  * WHERE is a string inserted by directives in slug_mem.h that contains 
@@ -126,14 +127,14 @@ void* slug_malloc(size_t size, char* WHERE)
 void slug_free(void* addr, char* WHERE)
 {
     if(mem_set == NULL) {
-		fprintf(stderr, "slug_mem: error: No memory allocated, don't do that!");
+		fprintf(stderr, "slug_mem:%s: error: No memory allocated, don't do that!", WHERE);
 		return;
 	}
     
     /* TODO */
     
     if(has_hashset(mem_set, addr) == NULL) {
-        fprintf(stderr, "slug_mem: error: Tried to free unallocated memory.\n");
+        fprintf(stderr, "slug_mem:%s: error: Tried to free unallocated memory.\n", WHERE);
         exit(EXIT_FAILURE);
     }
 
@@ -157,7 +158,7 @@ void slug_memstats(void)
 		fprintf(stdout, "No dynamic memory allocation has been done. Congrats!\n");
 		return;
 	} else {
-		printf("Unfreed Memory\n===========================\n");
+		printf("Unfreed Memory\n=============================\n");
 		print_hash(mem_set);
 		printf("\n");
     }
