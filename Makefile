@@ -16,20 +16,20 @@ all: ${TARGET}
 ${TARGET} : ${SRCO} slug_mem.o hashset.o meminfo.o meminfo_hash.o
 	${CC} -o ${TARGET} ${SRCO} slug_mem.o hashset.o meminfo.o meminfo_hash.o
 
-${TEST}: ${SRCC} slug_mem.h hashset.h meminfo.h meminfo_hash.h 
-	${CC} -c ${SRCC}
+${SRCO}: ${SRCC} slug_mem.h hashset.h meminfo.h meminfo_hash.h 
+	${CC} -lm -c ${SRCC}
 	
 slug_mem.o: slug_mem.c slug_mem.h hashset.h meminfo.h meminfo_hash.h
-	${CC} -c slug_mem.c
+	${CC} -lm -c slug_mem.c
 	
 hashset.o: hashset.c hashset.h meminfo.h meminfo_hash.h
-	${CC} -c hashset.c
+	${CC} -lm -c hashset.c
 	
 meminfo.o: meminfo.c meminfo.h
-	${CC} -c meminfo.c
+	${CC} -lm -c meminfo.c
 	
 meminfo_hash.o: meminfo_hash.c meminfo_hash.h 
-	${CC} -c meminfo_hash.c
+	${CC} -lm -c meminfo_hash.c
 	
 clean: 
 	- rm -f .o ${SRCO} slug_mem.o hashset.o meminfo.o meminfo_hash.o
