@@ -156,6 +156,9 @@ void slug_memstats(void)
 		return;
 	}
 
+	/* Print out all current allocations */
+	print_hash(mem_set);
+
 	/* Print statistics of all memory allocation */
 	printf("Statistics\n=============================\n");
     printf("Total Number of Allocations: %d\n", curr_size_loc);

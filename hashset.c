@@ -209,7 +209,11 @@ void remove_hashset (hashset_ref hashset, void* address)
 void print_hash(hashset_ref hashset)
 {
 	size_t index;
-		
+	
+	if (hashset->load == 0) {
+		return;
+	}
+
 	printf("Unfreed Memory\n=============================\n");
 		
 	for (index = 0; index < hashset->length; index++) {
