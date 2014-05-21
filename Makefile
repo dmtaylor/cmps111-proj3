@@ -1,10 +1,11 @@
 CC = cc
+# Change TEST and TESTC to change test file
 TEST = malloc_replace_test.o
 TESTC = malloc_replace_test.c
 
 
 test: ${TEST} slug_mem.o hashset.o meminfo.o meminfo_hash.o
-	${CC} -o test ${CFLAGS} ${TEST} slug_mem.o hashset.o meminfo.o meminfo_hash.o
+	${CC} -o test ${TEST} slug_mem.o hashset.o meminfo.o meminfo_hash.o
 
 ${TEST}: ${TESTC} slug_mem.h hashset.h meminfo.h meminfo_hash.h 
 	${CC} -c ${TESTC}
