@@ -33,4 +33,7 @@ meminfo_hash.o: meminfo_hash.c
 	${CC} ${CFLAGS} -c meminfo_hash.c
 	
 clean: 
-	- rm -f ${TARGET} ${SRCO} slug_mem.o hashset.o meminfo.o meminfo_hash.o
+	- rm -f ${SRCO} slug_mem.o hashset.o meminfo.o meminfo_hash.o
+  
+spotless:
+  -rm ${TARGET}
