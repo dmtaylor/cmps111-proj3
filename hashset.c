@@ -33,19 +33,12 @@ hashset_ref new_hashset (void)
 		new->array[index] = NULL;
 	}
 
-	/* 
-	DEBUGF ('h', "%p -> struct hashset {length = %d, array=%p}\n",
-				new, new->length, new->array);
-	*/
-
 	return new;
 }
 
 void free_hashset (hashset_ref hashset) 
 {
 	size_t i;
-
-	/* DEBUGF ('h', "free (%p), free (%p)\n", hashset->array, hashset); */
 
 	for (i = 0; i < hashset->length; i++){
 		free(hashset->array[i]);
@@ -63,7 +56,7 @@ bool too_full_hash(hashset_ref hashset)
    return hashset->load * 4 > (int)hashset->length;
 }
 
-/* TODO: Check this */
+
 void double_array_hash(hashset_ref hashset)
 {
 	size_t i;
@@ -106,7 +99,6 @@ void double_array_hash(hashset_ref hashset)
 }
 
 
-/* TODO: Check this */
 meminfo_ref has_hashset (hashset_ref hashset, void* address) 
 {
 	uint32_t code = meminfo_hash (address) % hashset->length;
@@ -121,7 +113,6 @@ meminfo_ref has_hashset (hashset_ref hashset, void* address)
 }
 
 
-/* TODO: Check this */
 void put_hashset (hashset_ref hashset, meminfo_ref item) 
 {
 	uint32_t index;
@@ -149,9 +140,6 @@ void put_hashset (hashset_ref hashset, meminfo_ref item)
 }
 
 
-/* TODO: Check this , should the while loop check for a previous tombstone
-         to prevent tombstombing something multiple times
-*/
 void remove_hashset (hashset_ref hashset, void* address)
 {
 	uint32_t index;
@@ -176,7 +164,6 @@ void remove_hashset (hashset_ref hashset, void* address)
 }
 
 
-/* TODO: Check this, format codes are probably wrong */
 void print_hash(hashset_ref hashset)
 {
 	size_t index;
