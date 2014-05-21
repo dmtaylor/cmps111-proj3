@@ -14,10 +14,10 @@ TARGET = example
 all: ${TARGET}
 
 ${TARGET} : ${SRCO} slug_mem.o hashset.o meminfo.o meminfo_hash.o
-	${CC} -o ${TARGET} ${TEST} slug_mem.o hashset.o meminfo.o meminfo_hash.o
+	${CC} -o ${TARGET} ${SRCO} slug_mem.o hashset.o meminfo.o meminfo_hash.o
 
-${TEST}: ${TESTC} slug_mem.h hashset.h meminfo.h meminfo_hash.h 
-	${CC} -c ${TESTC}
+${TEST}: ${SRCC} slug_mem.h hashset.h meminfo.h meminfo_hash.h 
+	${CC} -c ${SRCC}
 	
 slug_mem.o: slug_mem.c slug_mem.h hashset.h meminfo.h meminfo_hash.h
 	${CC} -c slug_mem.c
@@ -32,7 +32,7 @@ meminfo_hash.o: meminfo_hash.c meminfo_hash.h
 	${CC} -c meminfo_hash.c
 	
 clean: 
-	- rm -f .o ${TEST} slug_mem.o hashset.o meminfo.o meminfo_hash.o
+	- rm -f .o ${SRCO} slug_mem.o hashset.o meminfo.o meminfo_hash.o
 	
 spotless: clean
 	- rm test
