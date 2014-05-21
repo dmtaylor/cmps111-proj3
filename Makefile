@@ -36,4 +36,4 @@ clean:
 	- rm -f ${SRCO} slug_mem.o hashset.o meminfo.o meminfo_hash.o
   
 spotless:
-  -rm ${TARGET}
+	-rm ${TARGET}
