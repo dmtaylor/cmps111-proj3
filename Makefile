@@ -2,6 +2,7 @@
 # By: Forrest Kerslager, Nick Noto, David Taylor, Kevin Yeap, Connie Yu
 
 CC = cc
+CFLAGS = -lm -g -Wall -Wextra
 
 # SRCC are user C source files. Replace the file for custom projects
 SRCC = example.c
@@ -14,26 +15,25 @@ TARGET = example
 all: ${TARGET}
 
 ${TARGET} : ${SRCO} slug_mem.o hashset.o meminfo.o meminfo_hash.o
-	${CC} -o ${TARGET} ${SRCO} slug_mem.o hashset.o meminfo.o meminfo_hash.o
+	${CC} ${CFLAGS} -o ${TARGET} ${SRCO} slug_mem.o hashset.o meminfo.o meminfo_hash.o
 
-${SRCO}: ${SRCC} slug_mem.h hashset.h meminfo.h meminfo_hash.h 
-	${CC} -lm -c ${SRCC}
+${SRCO}: ${SRCC}
+	${CC} ${CFLAGS} -c ${SRCC}
 	
-slug_mem.o: slug_mem.c slug_mem.h hashset.h meminfo.h meminfo_hash.h
-	${CC} -lm -c slug_mem.c
+slug_mem.o: slug_mem.c
+	${CC} ${CFLAGS} -c slug_mem.c
 	
-hashset.o: hashset.c hashset.h meminfo.h meminfo_hash.h
-	${CC} -lm -c hashset.c
+hashset.o: hashset.c
+	${CC} ${CFLAGS} -c hashset.c
 	
-meminfo.o: meminfo.c meminfo.h
-	${CC} -lm -c meminfo.c
+meminfo.o: meminfo.c
+	${CC} ${CFLAGS} -c meminfo.c
 	
-meminfo_hash.o: meminfo_hash.c meminfo_hash.h 
-	${CC} -lm -c meminfo_hash.c
+meminfo_hash.o: meminfo_hash.c
+	${CC} ${CFLAGS} -c meminfo_hash.c
 	
 clean: 
-	- rm -f .o ${SRCO} slug_mem.o hashset.o meminfo.o meminfo_hash.o
-	
-spotless: clean
-	- rm test
-
+	- rm -f ${SRCO} slug_mem.o hashset.o meminfo.o meminfo_hash.o
+  
+spotless:
+  -rm ${TARGET}
