@@ -144,12 +144,10 @@ void remove_hashset (hashset_ref hashset, void* address)
 {
 	uint32_t index;
 
-	/* duplicate check, already in slug_free
 	if(has_hashset(hashset, address) == NULL) {
 		fprintf(stderr, "Cannot remove from memory\n");
 		return;
 	}
-	*/
 
 	index = meminfo_hash (address) % hashset->length;
 
