@@ -131,14 +131,11 @@ void slug_free(void* addr, char* WHERE)
 		return;
 	}
     
-    /* TODO */
-    
     if(has_hashset(mem_set, addr) == NULL) {
         fprintf(stderr, "slug_mem:%s: error: Tried to free unallocated memory.\n", WHERE);
         exit(EXIT_FAILURE);
     }
 
-	/* When to free mem structs? freeing here means you cannot tombstone in remove_hashset */
     remove_hashset(mem_set, addr);
     free(addr);
 }
