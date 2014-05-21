@@ -14,12 +14,12 @@
 typedef struct meminfo *meminfo_ref;
 typedef struct meminfo {
     size_t size;
-    time_t time;
+    double time;
     void* address;
     char* location;
     char tombstone;
 } meminfo_t;
 
-meminfo_ref new_meminfo(size_t, time_t, void*, char*);
+meminfo_ref new_meminfo(size_t, double, void*, char*);
 
 #endif

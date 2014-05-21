@@ -4,7 +4,7 @@
 
 #include "meminfo.h"
 
-meminfo_ref new_meminfo(size_t new_size, time_t new_time, void* new_addr,
+meminfo_ref new_meminfo(size_t new_size, double new_time, void* new_addr,
                         char* new_location)
 {
     meminfo_ref temp = malloc(sizeof(meminfo_t));

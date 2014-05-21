@@ -70,6 +70,15 @@ void* slug_malloc(size_t size, char* WHERE)
 		exit(EXIT_FAILURE);
 	}
 
+	/* Get the time of allocation */
+	err = gettimeofday(&tv, NULL);
+	if(!err) {
+		ticks = tv.tv_sec + tv.tv_usec * 1e-6;
+	} else {
+		fprintf(stderr,"slug_malloc:%s: error: Time resolution failed.\n", WHERE);
+		exit(EXIT_FAILURE);
+	}
+
 	/* Allocate the memory and store its location */
 	if (size != 0) {
 		mem_addr = malloc(size);
@@ -92,15 +101,6 @@ void* slug_malloc(size_t size, char* WHERE)
 			fprintf(stderr, "slug_malloc:%s: error: Cannot set exit handler.\n", WHERE);
 			exit(EXIT_FAILURE);
 		}
-	}
-
-	/* Get the time of allocation */
-	err = gettimeofday(&tv, NULL);
-	if(!err) {
-		ticks = tv.tv_sec + tv.tv_usec * 1e-6;
-	} else {
-		fprintf(stderr,"slug_malloc:%s: error: Time resolution failed.\n", WHERE);
-		exit(EXIT_FAILURE);
 	}
 
 	/* Insert size into size array, this array will be global and require array doubling */
