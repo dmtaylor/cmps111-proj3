@@ -154,11 +154,7 @@ void slug_memstats(void)
 	if(mem_set == NULL) {
 		fprintf(stdout, "No dynamic memory allocation has been done. Congrats!\n");
 		return;
-	} else {
-		printf("Unfreed Memory\n=============================\n");
-		print_hash(mem_set);
-		printf("\n");
-    }
+	}
 
 	/* Print statistics of all memory allocation */
 	printf("Statistics\n=============================\n");

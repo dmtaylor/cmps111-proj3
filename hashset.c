@@ -209,7 +209,9 @@ void remove_hashset (hashset_ref hashset, void* address)
 void print_hash(hashset_ref hashset)
 {
 	size_t index;
-
+		
+	printf("Unfreed Memory\n=============================\n");
+		
 	for (index = 0; index < hashset->length; index++) {
 		if(hashset->array[index] != NULL  && !hashset->array[index]->tombstone) {
 			printf("Address: %p Size: %u Time: %lf Location: %s\n",
@@ -219,6 +221,8 @@ void print_hash(hashset_ref hashset)
 				hashset->array[index]->location);
 		}
 	}
+
+	printf("\n");
 }
 
 
